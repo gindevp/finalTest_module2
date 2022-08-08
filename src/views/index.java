@@ -4,10 +4,7 @@ import cotroller.DAOManager;
 import model.Product;
 import storage.CSV;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class index {
     static String pathFile = "src/storage/product.dat";
@@ -60,19 +57,23 @@ public class index {
                     search(productList);
                     break;
                 case READ:
-                    new CSV().readFile(pathFile);
+                    productList = new CSV().readFile(pathFile);
                     break;
                 case WRITE:
                     new CSV().writeFile(productList, pathFile);
                     break;
                 case EXIT:
+                    System.exit(0);
                     break;
+                default:
+                    System.out.println("Mời nhập lại:");
             }
         }
     }
 
     private static void sort(List<Product> list) {
         list.sort(Comparator.comparingDouble(Product::getCost));
+        detail(list);
     }
 
     private static void search(List<Product> list) {
@@ -86,41 +87,51 @@ public class index {
     }
 
     private static void add(List list) {
-        System.out.println("Mời nhập id sản phẩm:");
-        String id = scanner1.nextLine();
-        System.out.println("Mời nhập tên sản phẩm:");
-        String name = scanner1.nextLine();
-        System.out.println("Mời nhập giá sản phẩm:");
-        int cost = scanner.nextInt();
-        System.out.println("Mời nhập số lượng sản phẩm:");
-        int amount = scanner.nextInt();
-        System.out.println("Mời nhập chi tiết sản phẩm:");
-        String detail = scanner1.nextLine();
+        try {
+            System.out.println("Mời nhập id sản phẩm:");
+            String id = scanner1.nextLine();
+            System.out.println("Mời nhập tên sản phẩm:");
+            String name = scanner1.nextLine();
+            System.out.println("Mời nhập giá sản phẩm:");
+            int cost = scanner.nextInt();
+            System.out.println("Mời nhập số lượng sản phẩm:");
+            int amount = scanner.nextInt();
+            System.out.println("Mời nhập chi tiết sản phẩm:");
+            String detail = scanner1.nextLine();
+            new DAOManager().add(list, new Product(id, name, cost, amount, detail));
+        } catch (InputMismatchException e) {
+            System.out.println("Nhập sai kiểu dữ liệu:");
+        }
 
-        new DAOManager().add(list, new Product(id, name, cost, amount, detail), pathFile);
+
     }
 
     private static void edit(List list) {
-        System.out.println("Mời nhập index cần sửa:");
-        int index = scanner.nextInt();
-        System.out.println("Mời nhập id sản phẩm:");
-        String id = scanner1.nextLine();
-        System.out.println("Mời nhập tên sản phẩm:");
-        String name = scanner1.nextLine();
-        System.out.println("Mời nhập giá sản phẩm:");
-        int cost = scanner.nextInt();
-        System.out.println("Mời nhập số lượng sản phẩm:");
-        int amount = scanner.nextInt();
-        System.out.println("Mời nhập chi tiết sản phẩm:");
-        String detail = scanner1.nextLine();
-        new DAOManager().edit(index, list, new Product(id, name, cost, amount, detail), pathFile);
+        try {
+            System.out.println("Mời nhập index cần sửa:");
+            int index = scanner.nextInt();
+            System.out.println("Mời nhập id sản phẩm:");
+            String id = scanner1.nextLine();
+            System.out.println("Mời nhập tên sản phẩm:");
+            String name = scanner1.nextLine();
+            System.out.println("Mời nhập giá sản phẩm:");
+            int cost = scanner.nextInt();
+            System.out.println("Mời nhập số lượng sản phẩm:");
+            int amount = scanner.nextInt();
+            System.out.println("Mời nhập chi tiết sản phẩm:");
+            String detail = scanner1.nextLine();
+            new DAOManager().edit(index, list, new Product(id, name, cost, amount, detail));
+        }catch (InputMismatchException e){
+            System.out.println("Nhập sai kiểu dữ liệu");
+        }
+
 
     }
 
     private static void remove(List list) {
         System.out.println("Mời nhập index cần xóa:");
         int index = scanner.nextInt();
-        new DAOManager().remove(index, list, pathFile);
+        new DAOManager().remove(index, list);
     }
 
 }
